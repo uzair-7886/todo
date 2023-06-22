@@ -1,5 +1,7 @@
 import React from 'react'
 import { useAuth,useUser } from "@clerk/clerk-react";
+import Navbar from './Navbar';
+import Footer from './Footer';
 
 function Todo() {
 
@@ -10,9 +12,14 @@ function Todo() {
       }
     
       return (
-        <h1 className="text-3xl font-bold underline">
+        <>
+        <Navbar/>
+        <h1 className='text-3xl'>
           Welcome back {user.firstName} {user.lastName} <br/> Complete the undone
         </h1>
+        {/* <Footer /> */}
+        </>
+        
       );
 }
 
