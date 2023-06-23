@@ -32,8 +32,8 @@ function Todo() {
             <div className='w-96 h-32 bg-gray-200 rounded-md p-3'>
             <h1 className='text-xl font-medium'>{task.title}</h1>
             <p className='text-sm'>{task.description}</p>
-            <p className='text-sm'>added on:{`${task.date.getDate()}/${task.date.getMonth()}/${task.date.getYear()} at ${task.date.getHours()}:${task.date.getMinutes()}:${task.date.getSeconds()}`}</p>
-            {/* {console.log(task.date.getDate())} */}
+            <p className='text-sm'>added on:{`${task.currentDate.getDate()}/${task.currentDate.getMonth()}/${task.currentDate.getYear()} at ${task.currentDate.getHours()}:${task.currentDate.getMinutes()}:${task.currentDate.getSeconds()}`}</p>
+            {/* {console.log(task.currentDate.getcurrentDate())} */}
             </div>
             </div>
           )
