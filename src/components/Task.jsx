@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import {db} from '../firebase'
+import { doc, setDoc } from "firebase/firestore/lite";
 
 function Task({ addToTasks }) {
   //   const { title, description, completed, date } = newTask;
@@ -10,7 +12,10 @@ function Task({ addToTasks }) {
     dueDate: "",
   });
 
+  // {console.log(datab)}
+
   let dueDate;
+
 
   const defaultDueDate = new Date();
 
@@ -20,7 +25,7 @@ function Task({ addToTasks }) {
     setNewTask({ ...newTask, [name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit =  async (e) => {
     e.preventDefault();
     const currentdate = new Date();
     // console.log(currentdate)
@@ -33,7 +38,7 @@ function Task({ addToTasks }) {
       currentDate: currentdate,
       dueDate:dueDateAndTime
     };
-    console.log(updatedDate);
+    // console.log(updatedDate);
 
     setNewTask(updatedDate);
 
@@ -45,7 +50,23 @@ function Task({ addToTasks }) {
       completed: false,
       date: "", // set date to a new Date object for the next task
     });
+
+    try {
+      const docRef = await setDoc(doc(db, "tasks", `${currentdate}`), {
+        title: title,
+        description: description,
+        completed: completed,
+        currentDate: currentdate,
+        dueDate:dueDateAndTime
+      });
+      console.log("Document written with ID: ", docRef.id);
+    } catch (error) {
+      console.log(error)
+    }
+    
   };
+
+
   return (
     <div className="flex justify-center">
     <div className="flex flex-col justify-center rounded-lg bg-[#d044f7] bg-opacity-50 w-[70vw] md:w-[50vw] ">
