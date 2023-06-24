@@ -1,22 +1,37 @@
-import React, { useState } from "react";
+import React, { useState,useRef,useEffect } from "react";
 import {db} from '../firebase'
-import { doc, setDoc } from "firebase/firestore/lite";
+import { doc, setDoc,addDoc,collection } from "firebase/firestore/lite";
+import {useUser } from "@clerk/clerk-react";
 
 function Task({ addToTasks }) {
-  //   const { title, description, completed, date } = newTask;
+
+  const datetimeRef = useRef();
+  const datetime='';
+
   const [newTask, setNewTask] = useState({
     title: "",
     description: "",
     completed: false,
     currentDate: "",
-    dueDate: "",
+    dueDate:datetime,
   });
+
+  useEffect(() => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = (now.getMonth() + 1).toString().padStart(2, "0");
+    const day = now.getDate().toString().padStart(2, "0");
+    const hours = "23";
+    const minutes = "55";
+    const datetime = `${year}-${month}-${day}T${hours}:${minutes}`;
+    datetimeRef.current.defaultValue = datetime;
+  }, []);
+
+  const {user}=useUser()
 
   // {console.log(datab)}
 
   let dueDate;
-
-
   const defaultDueDate = new Date();
 
   const { title, description, completed, date, dueDateTime } = newTask;
@@ -47,19 +62,23 @@ function Task({ addToTasks }) {
     setNewTask({
       title: "",
       description: "",
-      completed: false,
-      date: "", // set date to a new Date object for the next task
+      completed: false, 
+      currentDate:"",
+      dueDate:new Date()
     });
 
     try {
-      const docRef = await setDoc(doc(db, "tasks", `${currentdate}`), {
-        title: title,
-        description: description,
-        completed: completed,
-        currentDate: currentdate,
-        dueDate:dueDateAndTime
+
+      await setDoc(doc(db, "users", user.id), {
+        firstName: user.firstName,
+        lastName: user.lastName,
       });
-      console.log("Document written with ID: ", docRef.id);
+      
+      const tasksRef = collection(db, "users", user.id, "tasks");
+      await addDoc(tasksRef, updatedDate);
+
+      // const docRef = await setDoc(doc(db, "tasks", `${currentdate}`), updatedDate);
+      // console.log("Document written with ID: ", docRef.id);
     } catch (error) {
       console.log(error)
     }
@@ -99,6 +118,7 @@ function Task({ addToTasks }) {
         />
         <label className="text-white flex w-2/3 justify-between items-center font-semibold md:text-lg text-sm">
           Due Date: <br/> <input
+          id="datetime" ref={datetimeRef}
             type="datetime-local"
             value={dueDate}
             onChange={(e) => (dueDate = e.target.value)}
@@ -107,7 +127,7 @@ function Task({ addToTasks }) {
         </label>
         {/* <div className="h-[1px] w-full bg-[#d044f7] mt-2" /> */}
 
-        <input type="submit" value="Add to List" className="text-white font-bold mt-2 w-full border-[1px] p-2 border-[#d044f7] hover:bg-[#d044f7] rounded-lg cursor-pointer transition-all duration-[300ms] ease-out hover:w-full" />
+        <input  type="submit" value="Add to List" className="text-white font-bold mt-2 w-full border-[1px] p-2 border-[#d044f7] hover:bg-[#d044f7] rounded-lg cursor-pointer transition-all duration-[300ms] ease-out hover:w-full" />
       </form>
     </div>
     </div>
