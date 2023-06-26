@@ -63,7 +63,7 @@ function Todo() {
   };
 
   return (
-    <>
+    <div className='flex flex-col h-screen justify-between'>
       <Navbar />
       <div className='p-3 flex justify-center items-center'>
         <img src={hi} alt='' className='w-10 md:w-12' />
@@ -71,7 +71,7 @@ function Todo() {
           Welcome back {user.firstName} {user.lastName}
         </h1>
       </div>
-      <Task addToTasks={setTasks} />
+      <Task addToTasks={setOriginalTasks} originalTasks={originalTasks}  />
 
       <div class='flex rounded-md shadow-sm justify-center p-3' role='group'>
         <button
@@ -98,9 +98,8 @@ function Todo() {
       </div>
 
       <ListContainer title={viewTasks} tasks={tasks} loading={loadingList} removeTask={removeTask} />
-
-      {/* <Footer /> */}
-    </>
+      <Footer />
+    </div>
   );
 }
 
