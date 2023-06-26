@@ -14,7 +14,7 @@ function Navbar() {
         {/* <div className="md:p-2">
             categories 
         </div> */}
-        <SignOutButton/>
+        <SignOutButton className='bg-[#d044f7] px-3 py-1 mx-2 rounded-lg md:text-lg'/>
         <div className="flex justify-between items-center rounded-lg bg-[#d044f7] bg-opacity-50 ">
         <img src={search} alt=""  className="w-7 ml-2 cursor-pointer hover:scale-105"/>
         {/* <div className="w-0 ml-2 bg-black">.</div> */}
