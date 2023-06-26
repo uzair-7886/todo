@@ -4,8 +4,7 @@ import { doc, setDoc, addDoc, collection } from "firebase/firestore/lite";
 import { useUser } from "@clerk/clerk-react";
 
 function Task({ addToTasks }) {
-  const datetimeRef = useRef();
-  const [dueDate, setDueDate] = useState();
+  const [dueDate, setDueDate] = useState("");
   const [newTask, setNewTask] = useState({
     title: "",
     description: "",
@@ -25,7 +24,7 @@ function Task({ addToTasks }) {
     const minutes = "55";
     const datetime = `${year}-${month}-${day}T${hours}:${minutes}`;
     setDueDate(datetime)
-    datetimeRef.current.defaultValue = datetime;
+    // datetimeRef.current.defaultValue = datetime;
   }, []);
 
   const { user } = useUser();
@@ -106,7 +105,6 @@ function Task({ addToTasks }) {
             Due Date: <br />
             <input
               id="datetime"
-              ref={datetimeRef}
               type="datetime-local"
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}

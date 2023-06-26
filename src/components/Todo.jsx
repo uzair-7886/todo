@@ -1,10 +1,13 @@
-import React,{useState} from 'react'
+import React,{useEffect, useState} from 'react'
 import { useAuth,useUser } from "@clerk/clerk-react";
 import Navbar from './Navbar';
 import Footer from './Footer';
 import Task from './Task';
 import hi from '../assets/hi.png'
 import ListContainer from './ListContainer';
+import { getFirestore,doc,getDocs } from "firebase/firestore/lite";
+import { db } from '../firebase';
+import { collection } from 'firebase/firestore/lite';
 
 
 function Todo() {
@@ -16,6 +19,24 @@ function Todo() {
     if (!isLoaded || !userId) {
         return null;
       }
+
+    useEffect(()=>{
+      const getData=async ()=>{
+        const tasksRef=collection(db,"users",user.id,"tasks")
+      const allTasks= await getDocs(tasksRef)
+      const tempTasks=[]
+      // console.log(allTasks)
+      allTasks.forEach((doc)=>{
+        // console.log(doc.data())
+        // tempTasks.push(doc.data())
+        tempTasks.push({...doc.data(),id:doc.id})
+      })
+      setTasks(tempTasks)
+      }
+
+getData()
+    },[])
+
     
       return (
         <>
@@ -27,7 +48,7 @@ function Todo() {
         </h1>
         </div>
         <Task addToTasks={setTasks}/>
-        <ListContainer title='Today' tasks={tasks}/>
+        <ListContainer title='Today' tasks={tasks} />
 
        
 
