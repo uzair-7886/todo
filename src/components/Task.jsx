@@ -5,7 +5,7 @@ import { useUser } from "@clerk/clerk-react";
 
 function Task({ addToTasks }) {
   const datetimeRef = useRef();
-  const [dueDate, setDueDate] = useState("");
+  const [dueDate, setDueDate] = useState();
   const [newTask, setNewTask] = useState({
     title: "",
     description: "",
@@ -24,6 +24,7 @@ function Task({ addToTasks }) {
     const hours = "23";
     const minutes = "55";
     const datetime = `${year}-${month}-${day}T${hours}:${minutes}`;
+    setDueDate(datetime)
     datetimeRef.current.defaultValue = datetime;
   }, []);
 
