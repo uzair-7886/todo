@@ -1,61 +1,107 @@
-import React,{useEffect, useState} from 'react'
-import { useAuth,useUser } from "@clerk/clerk-react";
+import React, { useEffect, useState } from 'react';
+import { useAuth, useUser } from '@clerk/clerk-react';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import Task from './Task';
-import hi from '../assets/hi.png'
+import hi from '../assets/hi.png';
 import ListContainer from './ListContainer';
-import { getFirestore,doc,getDocs } from "firebase/firestore/lite";
+import { getFirestore, doc, getDocs, deleteDoc } from 'firebase/firestore/lite';
 import { db } from '../firebase';
 import { collection } from 'firebase/firestore/lite';
 
-
 function Todo() {
-  const [tasks,setTasks]=useState([])
- 
+  const [tasks, setTasks] = useState([]);
+  const [originalTasks, setOriginalTasks] = useState([]);
+  const [loadingList, setLoadingList] = useState(true);
+  const [viewTasks, setViewTasks] = useState('Today');
 
-    const { isLoaded, userId, sessionId, getToken } = useAuth();
-    const {user}=useUser();
-    if (!isLoaded || !userId) {
-        return null;
-      }
+  const { isLoaded, userId, sessionId, getToken } = useAuth();
+  const { user } = useUser();
 
-    useEffect(()=>{
-      const getData=async ()=>{
-        const tasksRef=collection(db,"users",user.id,"tasks")
-      const allTasks= await getDocs(tasksRef)
-      const tempTasks=[]
-      // console.log(allTasks)
-      allTasks.forEach((doc)=>{
-        // console.log(doc.data())
-        // tempTasks.push(doc.data())
-        tempTasks.push({...doc.data(),id:doc.id})
-      })
-      setTasks(tempTasks)
-      }
+  if (!isLoaded || !userId) {
+    return null;
+  }
 
-getData()
-    },[])
+  useEffect(() => {
+    const getData = async () => {
+      const tasksRef = collection(db, 'users', user.id, 'tasks');
+      const allTasks = await getDocs(tasksRef);
+      const tempTasks = [];
+      allTasks.forEach((doc) => {
+        tempTasks.push({
+          ...doc.data(),
+          id: doc.id,
+          currentDate: new Date(doc.data().currentDate.seconds * 1000 + doc.data().currentDate.nanoseconds / 1000000),
+          dueDate: new Date(doc.data().dueDate.seconds * 1000 + doc.data().dueDate.nanoseconds / 1000000)
+        });
+      });
+      setTasks(tempTasks);
+      setOriginalTasks(tempTasks);
+      setLoadingList(false);
+    };
 
-    
-      return (
-        <>
-        <Navbar/>
-        <div className='p-3 flex justify-center items-center'>
-        <img src={hi} alt="" className='w-10 md:w-12'/>
+    getData();
+  }, []);
+
+  useEffect(() => {
+    if (viewTasks == 'Today') {
+      const todayTasks = originalTasks.filter((task) => task.dueDate.getDate() == new Date().getDate() && task.dueDate.getMonth() == new Date().getMonth() && task.dueDate.getFullYear() == new Date().getFullYear());
+      setTasks(todayTasks);
+    } else if (viewTasks == 'Pending') {
+      const pendingTasks = originalTasks.filter((task) => task.dueDate.getDate() < new Date().getDate() && task.dueDate.getMonth() <= new Date().getMonth() && task.dueDate.getFullYear() <= new Date().getFullYear());
+      setTasks(pendingTasks);
+    } else if (viewTasks == 'Upcoming') {
+      const upcomingTasks = originalTasks.filter((task) => task.dueDate.getDate() > new Date().getDate() && task.dueDate.getMonth() >= new Date().getMonth() && task.dueDate.getFullYear() >= new Date().getFullYear());
+      setTasks(upcomingTasks);
+    }
+  }, [viewTasks, originalTasks]);
+
+  const removeTask = (id) => {
+    const newTasks = tasks.filter((task) => task.id !== id);
+    setTasks(newTasks);
+    deleteDoc(doc(db, 'users', user.id, 'tasks', id));
+  };
+
+  return (
+    <>
+      <Navbar />
+      <div className='p-3 flex justify-center items-center'>
+        <img src={hi} alt='' className='w-10 md:w-12' />
         <h1 className='p-2 text-xl md:text-2xl text-center font-medium'>
           Welcome back {user.firstName} {user.lastName}
         </h1>
-        </div>
-        <Task addToTasks={setTasks}/>
-        <ListContainer title='Today' tasks={tasks} />
+      </div>
+      <Task addToTasks={setTasks} />
 
-       
+      <div class='flex rounded-md shadow-sm justify-center p-3' role='group'>
+        <button
+          type='button'
+          className='px-4 py-2 text-sm font-medium text-gray-900 bg-slate-300 border border-gray-200 rounded-l-lg hover:bg-gray-100 hover:text-[#d044f7] focus:z-10 focus:ring-2 focus:ring-[#d044f7] focus:text-[#d044f7]'
+          onClick={() => setViewTasks('Today')}
+        >
+          Today
+        </button>
+        <button
+          type='button'
+          className='px-4 py-2 text-sm font-medium  bg-slate-300 text-gray-900 border-t border-b border-gray-200 hover:bg-gray-100 hover:text-[#d044f7] focus:z-10 focus:ring-2 focus:ring-[#d044f7] focus:text-[#d044f7]'
+          onClick={() => setViewTasks('Pending')}
+        >
+          Pending
+        </button>
+        <button
+          type='button'
+          className='px-4 py-2 text-sm font-medium text-gray-900 bg-slate-300 border border-gray-200 rounded-r-md hover:bg-gray-100 hover:text-[#d044f7]focus:z-10 focus:ring-2 focus:ring-[#d044f7] focus:text-[#d044f7]'
+          onClick={() => setViewTasks('Upcoming')}
+        >
+          Upcoming
+        </button>
+      </div>
 
-        {/* <Footer /> */}
-        </>
-        
-      );
+      <ListContainer title={viewTasks} tasks={tasks} loading={loadingList} removeTask={removeTask} />
+
+      {/* <Footer /> */}
+    </>
+  );
 }
 
-export default Todo
+export default Todo;

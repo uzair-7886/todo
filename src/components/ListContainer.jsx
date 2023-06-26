@@ -1,17 +1,17 @@
 import React from 'react'
 import {MdOutlineDoneOutline} from 'react-icons/md'
+import { ProgressBar } from 'react-loader-spinner';
 
 
-const ListItem=({task})=>{
+const ListItem=({task,removeTask})=>{
 
     const formatDate = (date) => {
-        const formattedDate = new Date(date.seconds * 1000 + date.nanoseconds / 1000000);
-        const day = formattedDate.getDate();
-        const month = formattedDate.getMonth() + 1;
-        const year = formattedDate.getFullYear();
-        const hours = formattedDate.getHours();
-        const minutes = formattedDate.getMinutes();
-        const seconds = formattedDate.getSeconds();
+        const day =  date.getDate();
+        const month =  date.getMonth() + 1;
+        const year =  date.getFullYear();
+        const hours =  date.getHours();
+        const minutes =  date.getMinutes();
+        const seconds =  date.getSeconds();
         return `${day}/${month}/${year} at ${hours}:${minutes}:${seconds}`;
       };
 
@@ -19,16 +19,14 @@ const ListItem=({task})=>{
     const dueDate = formatDate(task.dueDate);
 
 
-    const removeTask=(id)=>{
-        alert(`task removed with title:${id}`)
-      }
+    
     return(
         <div className='flex flex-row justify-between md:px-20 md:mx-5 items-center bg-slate-100 p-2 rounded-md my-2'>
         <div className='md:text-lg text-[#d044f7]'>
         <p>Title:{task.title}</p>
         <p>Description:{task.description}</p>
         <p>Added on:{currentDate}</p>
-        <p className='text-red-600'>Due on:
+        <p className='text-red-600 text-sm'>Due on:
             {dueDate}
         </p>
         </div>
@@ -39,21 +37,39 @@ const ListItem=({task})=>{
     )
 }
 
-function ListContainer({title,tasks}) {
+function ListContainer({title,tasks,loading,removeTask}) {
 
-
+    // console.log(loading)
     
   return (
-    <div className='flex justify-center my-3'>
-    <div className='flex flex-col bg-slate-300 w-[70vw] md:w-[50vw] p-3 rounded-lg'>
+    <div className='flex justify-center my-2'>
+    <div className='flex flex-col bg-slate-300 w-[70vw] md:w-[50vw] p-3 rounded-lg min-h-50'>
         <h1 className='text-lg p-2 text-center font-bold text-[#d044f7]'>{title}</h1>
         {
+            loading?
+            <div className='flex justify-center items-center'>
+            <ProgressBar
+            height="80"
+            width="80"
+            ariaLabel="progress-bar-loading"
+            wrapperStyle={{}}
+            wrapperClass="progress-bar-wrapper"
+            borderColor = '#F4442E'
+            barColor = '#51E5FF'
+          />
+          </div>
+          :
+          
+            (tasks.length==0)?<h1 className='text-lg text-[#d044f7] text-center'>No {title} Tasks</h1>:
             tasks.map((task)=>{
                 return(
-                    <ListItem task={task} key={task.id}/>
+                    <ListItem task={task} key={task.id} removeTask={removeTask}/>
                 )
-            })
-        }
+            }
+            )
+          }
+            
+        
 
     </div>
     </div>
