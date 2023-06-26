@@ -11,7 +11,7 @@ function Navbar() {
         <p className="text-lg sm:text-xl font-bold p-2 ">ToDo App</p>
       </div>
       <div className="flex justify-end items-center p-3 md:mx-5">
-        <SignOutButton className='bg-[#d044f7]  mx-2 text-sm rounded-lg md:text-lg text-white'/>
+        <SignOutButton className='bg-[#d044f7]  mx-2 text-sm rounded-lg md:text-lg text-white px-3 py-1'/>
         {/* <div className="md:p-2">
             categories 
         </div> */}
