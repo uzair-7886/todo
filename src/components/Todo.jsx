@@ -56,14 +56,15 @@ function Todo() {
     }
   }, [viewTasks, originalTasks]);
 
-  const removeTask = (id) => {
+  const removeTask = async(id) => {
     const newTasks = tasks.filter((task) => task.id !== id);
     setTasks(newTasks);
-    deleteDoc(doc(db, 'users', user.id, 'tasks', id));
+    await deleteDoc(doc(db, 'users', user.id, 'tasks', id));
+    alert("task removed successfully")
   };
 
   return (
-    <div className='flex flex-col h-screen justify-between'>
+    <>
       <Navbar />
       <div className='p-3 flex justify-center items-center'>
         <img src={hi} alt='' className='w-10 md:w-12' />
@@ -73,7 +74,7 @@ function Todo() {
       </div>
       <Task addToTasks={setOriginalTasks} originalTasks={originalTasks}  />
 
-      <div class='flex rounded-md shadow-sm justify-center p-3' role='group'>
+      <div className='flex rounded-md shadow-sm justify-center p-3' role='group'>
         <button
           type='button'
           className='px-4 py-2 text-sm font-medium text-gray-900 bg-slate-300 border border-gray-200 rounded-l-lg hover:bg-gray-100 hover:text-[#d044f7] focus:z-10 focus:ring-2 focus:ring-[#d044f7] focus:text-[#d044f7]'
@@ -98,8 +99,8 @@ function Todo() {
       </div>
 
       <ListContainer title={viewTasks} tasks={tasks} loading={loadingList} removeTask={removeTask} />
-      <Footer />
-    </div>
+      {/* <Footer /> */}
+    </>
   );
 }
 
