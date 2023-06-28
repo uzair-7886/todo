@@ -51,7 +51,7 @@ function Todo() {
       const pendingTasks = originalTasks.filter((task) => task.dueDate.getDate() < new Date().getDate() && task.dueDate.getMonth() <= new Date().getMonth() && task.dueDate.getFullYear() <= new Date().getFullYear());
       setTasks(pendingTasks);
     } else if (viewTasks == 'Upcoming') {
-      const upcomingTasks = originalTasks.filter((task) => task.dueDate.getDate() > new Date().getDate() && task.dueDate.getMonth() >= new Date().getMonth() && task.dueDate.getFullYear() >= new Date().getFullYear());
+      const upcomingTasks = originalTasks.filter((task) => task.dueDate.getDate() > new Date().getDate() || task.dueDate.getMonth() > new Date().getMonth() || task.dueDate.getFullYear() > new Date().getFullYear());
       setTasks(upcomingTasks);
     }
   }, [viewTasks, originalTasks]);
@@ -59,8 +59,10 @@ function Todo() {
   const removeTask = async(id) => {
     const newTasks = tasks.filter((task) => task.id !== id);
     setTasks(newTasks);
+    setOriginalTasks(newTasks)
     await deleteDoc(doc(db, 'users', user.id, 'tasks', id));
-    alert("task removed successfully")
+    // window.location.reload()
+    // alert("task removed successfully")
   };
 
   return (

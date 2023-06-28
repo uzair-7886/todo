@@ -53,8 +53,9 @@ const ListItem=({task,removeTask})=>{
         </div>
         
         </div>
-        <div>
-            <MdOutlineDoneOutline size={30} className='cursor-pointer ml-1' onClick={()=>removeTask(task.id)}/>
+        <div className='flex justify-between items-center'>
+            <button className='bg-[#d044f7] md:py-1 md:px-3 text-xs py-1 md:text-sm px-2 rounded-md text-white mt-2 cursor-pointer hover:scale-110'>edit</button>
+            <MdOutlineDoneOutline title='Mark as completed' color='green' size={30} className='cursor-pointer hover:scale-110 ml-5' onClick={()=>removeTask(task.id)}/>
         </div>
         </div>
     )

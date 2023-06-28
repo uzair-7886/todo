@@ -69,6 +69,7 @@ function Task({ addToTasks }) {
     } catch (error) {
       console.log(error);
     }
+    // alert(`task added on due date ${updatedDate.dueDate.getDate()}/${updatedDate.dueDate.getMonth()+1}/${updatedDate.dueDate.getFullYear()}`)
   };
 
   return (
