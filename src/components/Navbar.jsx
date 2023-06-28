@@ -5,7 +5,7 @@ import search from '../assets/search.png'
 
 function Navbar() {
   return (
-    <nav className=" w-full flex justify-between items-center h-16 bg-[#d044f7] bg-opacity-25 ">
+    <nav className=" w-full flex justify-around items-center h-16 bg-[#d044f7] bg-opacity-25 ">
       <div className="flex justify-start items-center p-3 md:mx-5 cursor-pointer">
         <img src={todo} alt="todo-icon" className="w-10" />
       </div>

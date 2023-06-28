@@ -66,11 +66,11 @@ function Todo() {
   };
 
   return (
-    <>
+    <div>
       <Navbar />
       <div className='p-3 flex justify-center items-center'>
         <img src={hi} alt='' className='w-10 md:w-12' />
-        <h1 className='p-2 text-xl md:text-2xl text-center font-medium'>
+        <h1 className='p-2 text-lg md:text-2xl text-center font-medium'>
           Welcome back {user.firstName} {user.lastName}
         </h1>
       </div>
@@ -102,7 +102,7 @@ function Todo() {
 
       <ListContainer title={viewTasks} tasks={tasks} loading={loadingList} removeTask={removeTask} />
       {/* <Footer /> */}
-    </>
+    </div>
   );
 }
 
