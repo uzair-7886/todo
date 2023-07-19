@@ -31,11 +31,11 @@ const ClerkProviderWithRoutes=()=>{
       <Routes>
       <Route
           path="/sign-in/*"
-          element={<SignIn routing="path" path="/sign-in" />}
+          element={<SignIn routing="path" path="https://flowing-skink-67.accounts.dev/sign-in" />}
         />
          <Route
           path="/sign-up/*"
-          element={<SignUp routing="path" path="/sign-up" />}
+          element={<SignUp routing="path" path="https://flowing-skink-67.accounts.dev//sign-up" />}
         />
         <Route
         path='/'
@@ -60,8 +60,8 @@ function App() {
   
   return (
     <BrowserRouter>
-    {/* <ClerkProviderWithRoutes/> */}
-    <p>hello test</p>
+    <ClerkProviderWithRoutes/>
+    {/* <p>hello test</p> */}
     </BrowserRouter>
   );
 }
