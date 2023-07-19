@@ -31,11 +31,11 @@ const ClerkProviderWithRoutes=()=>{
       <Routes>
       <Route
           path="/sign-in/*"
-          element={<SignIn routing="path" path="https://flowing-skink-67.accounts.dev/sign-in" />}
+          element={<SignIn routing="path" path="/sign-in" />}
         />
          <Route
           path="/sign-up/*"
-          element={<SignUp routing="path" path="https://flowing-skink-67.accounts.dev//sign-up" />}
+          element={<SignUp routing="path" path="/sign-up" />}
         />
         <Route
         path='/'
