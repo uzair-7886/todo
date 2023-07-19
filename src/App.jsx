@@ -60,7 +60,8 @@ function App() {
   
   return (
     <BrowserRouter>
-    <ClerkProviderWithRoutes/>
+    {/* <ClerkProviderWithRoutes/> */}
+    <p>hello test</p>
     </BrowserRouter>
   );
 }
