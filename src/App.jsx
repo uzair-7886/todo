@@ -8,7 +8,7 @@ import {
   RedirectToSignIn,
 } from "@clerk/clerk-react";
 // import dotenv from 'dotenv';
-import Todo from './components/todo';
+import Todo from './components/Todo';
 import './App.css'
 
 
