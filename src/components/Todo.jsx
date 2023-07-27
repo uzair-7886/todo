@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useLayoutEffect } from 'react';
 import { useAuth, useUser } from '@clerk/clerk-react';
 import Navbar from './Navbar';
 import Footer from './Footer';
@@ -8,14 +8,34 @@ import ListContainer from './ListContainer';
 import { getFirestore, doc, getDocs, deleteDoc } from 'firebase/firestore/lite';
 import { db } from '../firebase';
 import { collection } from 'firebase/firestore/lite';
+import Notification from './Notification';
 
 function Todo() {
   const [tasks, setTasks] = useState([]);
   const [originalTasks, setOriginalTasks] = useState([]);
   const [loadingList, setLoadingList] = useState(true);
   const [viewTasks, setViewTasks] = useState('Today');
+  const [notification,setNotification]=useState({
+    mode:false,
+    text:''
+  })
 
-  const { isLoaded, userId, sessionId, getToken } = useAuth();
+  const [prevText, setPrevText] = useState(''); 
+
+useLayoutEffect(() => {
+  const timer = setTimeout(() => {
+    setPrevText(notification.text); // Save prev text
+
+    setNotification({
+      mode: false,
+      text: '', 
+    });
+  }, 1500); // Keep mounted for 1s
+
+  return () => clearTimeout(timer);
+}, [notification]);
+
+  const { isLoaded, userId, getToken } = useAuth();
   const { user } = useUser();
 
   if (!isLoaded || !userId) {
@@ -57,10 +77,15 @@ function Todo() {
   }, [viewTasks, originalTasks]);
 
   const removeTask = async(id) => {
+
     const newTasks = tasks.filter((task) => task.id !== id);
     setTasks(newTasks);
     setOriginalTasks(newTasks)
     await deleteDoc(doc(db, 'users', user.id, 'tasks', id));
+    setNotification({
+      mode:true,
+      text:'Task Removed'
+    })
     // window.location.reload()
     // alert("task removed successfully")
   };
@@ -68,13 +93,14 @@ function Todo() {
   return (
     <div>
       <Navbar />
+      {notification.mode && <Notification text={notification.text} show={notification.mode}/>}
       <div className='p-3 flex justify-center items-center'>
         <img src={hi} alt='' className='w-10 md:w-12' />
         <h1 className='p-2 text-lg md:text-2xl text-center font-medium'>
           Welcome back {user.firstName} {user.lastName}
         </h1>
       </div>
-      <Task addToTasks={setOriginalTasks} originalTasks={originalTasks}  />
+      <Task addToTasks={setOriginalTasks} originalTasks={originalTasks} setNotification={setNotification}  />
 
       <div className='flex rounded-md shadow-sm justify-center p-3' role='group'>
         <button
@@ -100,7 +126,7 @@ function Todo() {
         </button>
       </div>
 
-      <ListContainer title={viewTasks} tasks={tasks} loading={loadingList} removeTask={removeTask} />
+      <ListContainer title={viewTasks} tasks={tasks} loading={loadingList} removeTask={removeTask} setNotification={setNotification} />
       {/* <Footer /> */}
     </div>
   );

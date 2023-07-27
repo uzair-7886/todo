@@ -61,7 +61,7 @@ const ListItem=({task,removeTask})=>{
     )
 }
 
-function ListContainer({title,tasks,loading,removeTask}) {
+function ListContainer({title,tasks,loading,removeTask,setNotification}) {
 
     // console.log(loading)
     
@@ -87,7 +87,7 @@ function ListContainer({title,tasks,loading,removeTask}) {
             (tasks.length==0)?<h1 className='text-lg text-[#d044f7] text-center'>No {title} Tasks</h1>:
             tasks.map((task)=>{
                 return(
-                    <ListItem task={task} key={task.id} removeTask={removeTask}/>
+                    <ListItem task={task} key={task.id} removeTask={removeTask} setNotification={setNotification}/>
                 )
             }
             )

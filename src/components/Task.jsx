@@ -3,7 +3,7 @@ import { db } from "../firebase";
 import { doc, setDoc, addDoc, collection } from "firebase/firestore/lite";
 import { useUser } from "@clerk/clerk-react";
 
-function Task({ addToTasks }) {
+function Task({ addToTasks,setNotification }) {
   const [dueDate, setDueDate] = useState("");
   const [newTask, setNewTask] = useState({
     title: "",
@@ -59,6 +59,10 @@ function Task({ addToTasks }) {
     });
 
     try {
+      setNotification({
+        mode:true,
+        text:'Task Added'
+      })
       await setDoc(doc(db, "users", user.id), {
         firstName: user.firstName,
         lastName: user.lastName,
