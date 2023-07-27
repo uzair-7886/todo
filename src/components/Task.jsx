@@ -60,7 +60,7 @@ function Task({ addToTasks,setNotification }) {
 
     try {
       setNotification({
-        mode:true,
+        mode:'show',
         text:'Task Added'
       })
       await setDoc(doc(db, "users", user.id), {

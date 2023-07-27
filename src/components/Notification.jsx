@@ -1,9 +1,10 @@
 import React from 'react'
 
 function Notification({text,show}) {
+    // {console.log(show)}
   return (
     
-    <div className={`bg-green-100 rounded-lg fixed md:bottom-5 right-5   border-gray-300 border p-3 shadow-lg w-2/3 md:w-1/5  ${show ? 'animate-slide-in' : 'animate-slide-out'}`}>
+    <div className={`bg-green-100 ${show==undefined ?'invisible':''} rounded-lg fixed md:bottom-5 right-5   border-gray-300 border p-3 shadow-lg w-2/3 md:w-1/5  ${show == 'show' ? ' visible animate-slide-in' : ' visible animate-slide-out'}`}>
       <div className="flex flex-row">
         <div className="px-2">
           <svg width="24" height="24" viewBox="0 0 1792 1792" fill="#44C997" xmlns="http://www.w3.org/2000/svg">
